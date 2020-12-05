@@ -4,6 +4,8 @@ import { TextField, Divider, InputAdornment, IconButton } from '@material-ui/cor
 import ImageSearchIcon from '@material-ui/icons/ImageSearch';
 import axios from 'axios';
 
+import * as Path from './utils/GlobalVariables';
+
 function getFormData(e) {
   const data = {};
   const formData = new FormData(e.target);
@@ -18,21 +20,30 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       data_images: [],
+      data_title: "",
     };
   }
 
   // fetch data images
-  async postImageSearchData(req) {
-    try {
-      const response = await axios.post(Path.API + 'experiences/categories', req);
-      this.setState({ data_images: response.data });
-    } catch (e) {
-      console.log(e);
-    }
+  postImageSearchData(req) {
+    axios.post(Path.API + 'flickr/feeds/publicPhotos', req)
+      .then((response) => {
+        var resp = response.data;
+        if (resp) {
+          this.setState({
+            data_images: resp.items,
+            data_title: resp.title
+          });
+        }
+        console.log('tes', response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   componentDidMount() {
-
+    this.postImageSearchData({ format: "json" });
   }
 
   onSubmitSearch(e) {
@@ -50,7 +61,7 @@ export default class App extends React.Component {
     return (
       <div className="app">
         <div className="app-header">
-          <h2 style={{ margin: "1rem 0" }}>Test AIA Project</h2>
+          <h2 style={{ margin: "1rem 0" }}>{this.state.data_title}</h2>
           <form onSubmit={this.onSubmitSearch}>
             <div className="h-flex jc ac search-bar">
               <TextField id="search_value" name="search_value"
