@@ -2,6 +2,7 @@ import React from "react";
 import './App.css';
 import { TextField, Divider, InputAdornment, IconButton } from '@material-ui/core';
 import ImageSearchIcon from '@material-ui/icons/ImageSearch';
+import axios from 'axios';
 
 function getFormData(e) {
   const data = {};
@@ -16,7 +17,18 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data_images: [],
     };
+  }
+
+  // fetch data images
+  async postImageSearchData(req) {
+    try {
+      const response = await axios.post(Path.API + 'experiences/categories', req);
+      this.setState({ data_images: response.data });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   componentDidMount() {
