@@ -1,8 +1,14 @@
 import React from "react";
 import './App.css';
-import { TextField, Divider, InputAdornment, IconButton } from '@material-ui/core';
+import {
+  TextField, Divider, InputAdornment, IconButton, Container, Grid,
+  Card, CardActionArea, CardContent, CardMedia, Grow
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import ImageSearchIcon from '@material-ui/icons/ImageSearch';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import axios from 'axios';
+import moment from "moment";
 
 import * as Path from './utils/GlobalVariables';
 
@@ -15,12 +21,27 @@ function getFormData(e) {
   return data;
 }
 
+function sliceData(data, current, limit) {
+  var start = (current - 1) * limit;
+  var end = current * limit;
+  var fixdata = data.slice(start, end);
+  return fixdata;
+}
+
+function calculatePagesCount(limit, totalCount) {
+  return totalCount < limit ? 1 : Math.ceil(totalCount / limit);
+}
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data_images_original: [],
       data_images: [],
+      data_images_total: 0,
       data_title: "",
+      current_page: 1,
+      limit_per_page: 9,
     };
   }
 
@@ -31,7 +52,9 @@ export default class App extends React.Component {
         var resp = response.data;
         if (resp) {
           this.setState({
-            data_images: resp.items,
+            data_images_original: resp.items,
+            data_images: sliceData(resp.items, 1, this.state.limit_per_page),
+            data_images_total: resp.items.length,
             data_title: resp.title
           });
         }
@@ -44,6 +67,21 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.postImageSearchData({ format: "json" });
+  }
+
+  onClickImage = (link) => {
+    window.open(link);
+  }
+
+  onChangePagination = (event, page) => {
+    this.setState({
+      data_images: [],
+      current_page: page
+    }, () => {
+      this.setState({
+        data_images: sliceData(this.state.data_images_original, page, this.state.limit_per_page),
+      })
+    });
   }
 
   onSubmitSearch(e) {
@@ -61,7 +99,7 @@ export default class App extends React.Component {
     return (
       <div className="app">
         <div className="app-header">
-          <h2 style={{ margin: "1rem 0" }}>{this.state.data_title}</h2>
+          <h2 className="text-center" style={{ margin: "1rem 0" }}>Test AIA Project</h2>
           <form onSubmit={this.onSubmitSearch}>
             <div className="h-flex jc ac search-bar">
               <TextField id="search_value" name="search_value"
@@ -80,7 +118,53 @@ export default class App extends React.Component {
         </div>
         <Divider />
         <div className="app-content">
-          tes
+          <Container maxWidth="lg">
+            <h2 className="text-center" style={{ margin: "1rem 0" }}>{this.state.data_title}</h2>
+
+            {this.state.data_images ?
+              <Grid container spacing={2}>
+                {this.state.data_images.map((row, index) => {
+
+                  return (
+                    <Grow in={true} timeout={index * 1000}>
+                      <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Card onClick={this.onClickImage.bind(this, row.link)}>
+                          <CardActionArea>
+                            <CardMedia
+                              className="image-item"
+                              image={row.media.m}
+                            />
+                            <CardContent>
+                              <h4>{row.title}</h4>
+                              <p>By:&nbsp;{row.author}</p>
+                              <p className="text-right" style={{ fontSize: '11px', color: '#959da5' }}>
+                                Uploaded on {moment(row.date_taken).format('DD MMM YYYY HH:MM')}
+                              </p>
+                            </CardContent>
+                          </CardActionArea>
+                        </Card>
+                      </Grid>
+                    </Grow>
+                  );
+                })}
+              </Grid>
+              : <div className="content-not-found">
+                <ErrorOutlineIcon style={{ fontSize: '300px' }} color="error" />
+                <h2>Sorry, Data Not Found</h2>
+              </div>
+            }
+
+            {this.state.data_images_total > this.state.limit_per_page ?
+              <Pagination
+                className="image-pagination"
+                color="primary"
+                count={calculatePagesCount(this.state.limit_per_page, this.state.data_images_total)}
+                page={this.state.current_page}
+                onChange={this.onChangePagination}
+              />
+              : null
+            }
+          </Container>
         </div>
       </div>
     )

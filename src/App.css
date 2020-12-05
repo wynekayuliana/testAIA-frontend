@@ -20,12 +20,18 @@
 .v-flex.ac {
     align-items: center;
 }
+.text-center {
+    text-align: center !important;
+}
+.text-right {
+    text-align: right !important;
+}
 /**************************************/
 
 /* App styles */
-.app {
+/* .app {
     text-align: center;
-}
+} */
 
 .app-header {
     padding: 20px;
@@ -35,13 +41,18 @@
 
 .search-input {
     width: 50%;
-    margin: 0 20px;
+    margin: 20px;
     border-radius: 2px;
     border: none;
     padding: 6px;
 }
 
 .app-content {
+    padding: 30px;
+}
+
+.content-not-found {
+    text-align: center;
     padding: 30px;
 }
 
@@ -83,9 +94,8 @@
 }
 
 .image-item {
-    cursor: pointer;
     animation: all 0.3s ease-in-out;
-    margin: 8px;
+    height: 250px;
 }
 
 .image-metadata {
@@ -93,4 +103,11 @@
     transition: all 0.3s ease-in-out;
     margin: 20px;
     color: #FFF;
+}
+
+.image-pagination {
+    margin: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
