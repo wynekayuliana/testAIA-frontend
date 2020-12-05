@@ -58,7 +58,7 @@ export default class App extends React.Component {
             data_title: resp.title
           });
         }
-        console.log('tes', response.data);
+        // console.log('tes', response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -90,8 +90,14 @@ export default class App extends React.Component {
   onSubmitSearch(e) {
     e.preventDefault();
     var data = getFormData(e.target);
+    var escape_txtsearch = data.search_value.replace(/[^a-zA-Z0-9 ]/g, "");
+    var tags_txtsearch = escape_txtsearch.replace(/[ ,]+/g, ",");
 
-
+    var request_body = {
+      format: "json",
+      tags: tags_txtsearch
+    };
+    this.postImageSearchData(request_body);
   }
 
   componentWillUnmount() {
@@ -115,7 +121,6 @@ export default class App extends React.Component {
                     </IconButton>
                   </InputAdornment>,
                 }}
-                required
               />
             </div>
           </form>
@@ -139,10 +144,10 @@ export default class App extends React.Component {
                               image={row.media.m}
                             />
                             <CardContent>
-                              <h4>{row.title}</h4>
+                              <h4>{row.title.substring(0, 49) || 'Untitled'}</h4>
                               <p>By:&nbsp;{row.author}</p>
                               <p className="text-right" style={{ fontSize: '11px', color: '#959da5' }}>
-                                Uploaded on {moment(row.date_taken).format('DD MMM YYYY HH:MM')}
+                                Uploaded&nbsp;on&nbsp;{moment(row.date_taken).format('DD MMM YYYY HH:MM')}
                               </p>
                             </CardContent>
                           </CardActionArea>
