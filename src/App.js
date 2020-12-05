@@ -74,6 +74,9 @@ export default class App extends React.Component {
   }
 
   onChangePagination = (event, page) => {
+    const section = document.querySelector('#app-content');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     this.setState({
       data_images: [],
       current_page: page
@@ -103,7 +106,7 @@ export default class App extends React.Component {
           <form onSubmit={this.onSubmitSearch}>
             <div className="h-flex jc ac search-bar">
               <TextField id="search_value" name="search_value"
-                label="Search Something . . ."
+                label="Search Something"
                 variant="outlined" className="search-input"
                 InputProps={{
                   endAdornment: <InputAdornment position="end">
@@ -112,12 +115,13 @@ export default class App extends React.Component {
                     </IconButton>
                   </InputAdornment>,
                 }}
+                required
               />
             </div>
           </form>
         </div>
         <Divider />
-        <div className="app-content">
+        <div className="app-content" id="app-content">
           <Container maxWidth="lg">
             <h2 className="text-center" style={{ margin: "1rem 0" }}>{this.state.data_title}</h2>
 
