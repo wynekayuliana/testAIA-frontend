@@ -1,38 +1,96 @@
-.App {
-  text-align: center;
+/* Common class styles used across all app */
+.h-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.h-flex.jc {
+    justify-content: center;
+}
+.h-flex.ac {
+    align-items: center;
+}
+.h-flex.sb {
+    justify-content: space-between;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.v-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.v-flex.ac {
+    align-items: center;
+}
+/**************************************/
+
+/* App styles */
+.app {
+    text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.app-header {
+    padding: 20px;
+    margin: auto;
+    min-height: 150px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.search-input {
+    width: 50%;
+    margin: 0 20px;
+    border-radius: 2px;
+    border: none;
+    padding: 6px;
 }
 
-.App-link {
-  color: #61dafb;
+.app-content {
+    padding: 30px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.query {
+    font-size: 10px;
+    background: grey;
+    padding: 4px;
+    border-radius: 2px;
+    margin: 0 5px;
+}
+
+.popup-container-enter.image-popup {
+    opacity: 0;
+}
+.popup-container-enter.popup-container-enter-active.image-popup {
+    opacity: 1;
+    transition: all 0.4s ease-in-out;
+}
+.popup-container-leave {
+    opacity: 1;
+}
+.popup-container-leave.popup-container-leave-active.image-popup {
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.image-popup-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.popup-image {
+    cursor: pointer;
+    -webkit-box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.8);
+    box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.8);
+}
+
+.image-item {
+    cursor: pointer;
+    animation: all 0.3s ease-in-out;
+    margin: 8px;
+}
+
+.image-metadata {
+    font-size: 13px;
+    transition: all 0.3s ease-in-out;
+    margin: 20px;
+    color: #FFF;
 }
