@@ -181,6 +181,9 @@ export default class App extends React.Component {
             }
           </Container>
         </div>
+        <div className="app-footer">
+          <a href="https://github.com/wynekayuliana" target="blank" style={{ color: '#fff' }}>wynekayuliana</a> &copy; 2020
+        </div>
       </div>
     )
   }
