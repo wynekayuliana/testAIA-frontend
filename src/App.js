@@ -14,7 +14,7 @@ import * as Path from './utils/GlobalVariables';
 
 function getFormData(e) {
   const data = {};
-  const formData = new FormData(e.target);
+  const formData = new FormData(e);
   for (let entry of formData.entries()) {
     data[entry[0]] = entry[1]
   }
@@ -87,16 +87,17 @@ export default class App extends React.Component {
     });
   }
 
-  onSubmitSearch(e) {
+  onSubmitSearch = (e) => {
     e.preventDefault();
     var data = getFormData(e.target);
-    var escape_txtsearch = data.search_value.replace(/[^a-zA-Z0-9 ]/g, "");
-    var tags_txtsearch = escape_txtsearch.replace(/[ ,]+/g, ",");
+    var escape_txtsearch = data.search_value.replace(/[^a-zA-Z0-9 ]/g, ""); // clear special chars
+    var tags_txtsearch = escape_txtsearch.replace(/[ ,]+/g, ","); // format space into coma
 
     var request_body = {
       format: "json",
       tags: tags_txtsearch
     };
+    // do the execution
     this.postImageSearchData(request_body);
   }
 
@@ -133,19 +134,24 @@ export default class App extends React.Component {
             {this.state.data_images ?
               <Grid container spacing={2}>
                 {this.state.data_images.map((row, index) => {
+                  var _title = row.title === " " ? row.title.replace(" ", "-")
+                    : row.title === "" ? "-"
+                      : row.title.substring(0, 49);
+                  var _author = row.author.match(/"(.*?)"/)[1];
 
                   return (
-                    <Grow in={true} timeout={index * 1000}>
-                      <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Grow in={true} timeout={index * 1000} key={index}>
+                      <Grid item xs={12} sm={6} md={4}>
                         <Card onClick={this.onClickImage.bind(this, row.link)}>
                           <CardActionArea>
                             <CardMedia
                               className="image-item"
                               image={row.media.m}
+                              title={row.title}
                             />
                             <CardContent>
-                              <h4>{row.title.substring(0, 49) || 'Untitled'}</h4>
-                              <p>By:&nbsp;{row.author}</p>
+                              <h4>{_title}</h4>
+                              <p>By:&nbsp;{_author}</p>
                               <p className="text-right" style={{ fontSize: '11px', color: '#959da5' }}>
                                 Uploaded&nbsp;on&nbsp;{moment(row.date_taken).format('DD MMM YYYY HH:MM')}
                               </p>
@@ -174,6 +180,9 @@ export default class App extends React.Component {
               : null
             }
           </Container>
+        </div>
+        <div className="app-footer">
+          <a href="https://github.com/wynekayuliana" target="blank" style={{ color: '#fff' }}>wynekayuliana</a> &copy; 2020
         </div>
       </div>
     )
